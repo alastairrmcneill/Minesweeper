@@ -1,0 +1,3 @@
+ROWS = 10
+COLS = 10
+NUM_BOMBS = 10
