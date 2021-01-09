@@ -1,23 +1,23 @@
 import random
+import pygame
 from minesweeper.Tile import Tile
-from minesweeper.Constants import ROWS, COLS, NUM_BOMBS
+from minesweeper.Constants import ROWS, COLS, NUM_BOMBS, LIGHT_GREY, DARK_GREY, SQUARE_SIZE, WIN_HIEGHT, WIN_WIDTH
 
 class Board:
     def __init__(self):
         self.board = [[Tile(i,j) for j in range(ROWS)] for i in range(COLS)]
         self.generate_board()
-        self.print_board()
 
     def generate_board(self):
-        bomb_indexes = random.sample(range(1,ROWS * COLS), NUM_BOMBS)
+        bomb_indexes = random.sample(range(0,ROWS * COLS), NUM_BOMBS)
 
         index = 0
         for i in range(ROWS):
             for j in range(COLS):
-                index += 1
                 if index in bomb_indexes:
                     self.board[i][j].set_bomb()
                     self.check_neighbours(i, j)
+                index += 1
 
     def check_neighbours(self, i, j):
         for x in range(-1,2):
@@ -40,7 +40,20 @@ class Board:
                         row.append("[ ]")
             print(row)
 
-    def draw(self):
+    def draw(self, win):
+        self.draw_background(win)
+        self.draw_tiles(win)
+
+    def draw_tiles(self, win):
         for i in range(len(self.board)):
             for j in range(len(self.board[0])):
-                self.board[i][j].draw()
+                self.board[i][j].draw(win)
+
+    def draw_background(self, win):
+        win.fill(LIGHT_GREY)
+        for i in range(len(self.board) + 1):
+            for j in range(len(self.board[0]) + 1):
+                pygame.draw.line(win, DARK_GREY, (i * SQUARE_SIZE, 0), (i * SQUARE_SIZE, WIN_HIEGHT), 3)
+                pygame.draw.line(win, DARK_GREY, (0, j * SQUARE_SIZE), (WIN_WIDTH, j * SQUARE_SIZE), 3)
+
+
