@@ -1,9 +1,10 @@
 import pygame
 from minesweeper.Board import Board
-from minesweeper.Constants import ROWS, COLS, NUM_BOMBS
+from minesweeper.Constants import ROWS, COLS, NUM_BOMBS, BG_IMG, SMALL_FONT, WHITE
 
 class Game:
     def __init__(self):
+        self.screen = pygame.Surface((600,600))
         self.reset()
 
 
@@ -54,6 +55,15 @@ class Game:
     def lost_game(self):
         self.board.show_bombs()
 
+    def draw_bomb_text(self, win):
+        bomb_str = str(self.num_bombs - self.board.num_flagged())
+        bomb_text = SMALL_FONT.render(bomb_str, False, WHITE)
+        rect = bomb_text.get_rect(midleft=(105,112))
+        win.blit(bomb_text, rect)
+
     def draw(self, win):
-        self.board.draw(win)
+        win.blit(BG_IMG, (0,0))
+        self.board.draw(self.screen)
+        win.blit(self.screen, (200,0))
+        self.draw_bomb_text(win)
         pygame.display.update()

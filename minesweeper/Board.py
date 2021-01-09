@@ -36,6 +36,14 @@ class Board:
                     if i+x >= 0 and i+x < self.rows and j+y >= 0 and j+y < self.cols:
                         self.board[i+x][j+y].surrounding_bombs += 1
 
+    def num_flagged(self):
+        count = 0
+        for row in self.board:
+            for tile in row:
+                if tile.flagged:
+                    count += 1
+        return count
+
     def show_bombs(self):
         for row in self.board:
             for tile in row:
