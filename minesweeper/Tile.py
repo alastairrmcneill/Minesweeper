@@ -12,6 +12,7 @@ class Tile:
         self.surrounding_bombs = 0
         self.flag = False
         self.img = None
+        self.scaled_img = None
         self.get_pos(row, col)
 
     def get_pos(self, row, col):
@@ -27,6 +28,8 @@ class Tile:
             else:
                 self.img = NUM_IMGS[self.surrounding_bombs]
 
+    def scale_img(self):
+        self.scaled_img = pygame.transform.scale(self.img, (SQUARE_SIZE, SQUARE_SIZE))
 
 
     def set_bomb(self):
@@ -34,4 +37,5 @@ class Tile:
 
     def draw(self, win):
         self.get_img()
-        win.blit(self.img, (self.x, self.y))
+        self.scale_img()
+        win.blit(self.scaled_img, (self.x, self.y))

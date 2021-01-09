@@ -1,19 +1,22 @@
 import random
 import pygame
 from minesweeper.Tile import Tile
-from minesweeper.Constants import ROWS, COLS, NUM_BOMBS, LIGHT_GREY, DARK_GREY, SQUARE_SIZE, WIN_HIEGHT, WIN_WIDTH
+from minesweeper.Constants import LIGHT_GREY, DARK_GREY, SQUARE_SIZE, WIN_HIEGHT, WIN_WIDTH
 
 class Board:
-    def __init__(self):
-        self.board = [[Tile(i,j) for j in range(ROWS)] for i in range(COLS)]
+    def __init__(self, rows, cols, num_bombs):
+        self.rows = rows
+        self.cols = cols
+        self.num_bombs = num_bombs
+        self.board = [[Tile(i,j) for j in range(rows)] for i in range(cols)]
         self.generate_board()
 
     def generate_board(self):
-        bomb_indexes = random.sample(range(0,ROWS * COLS), NUM_BOMBS)
+        bomb_indexes = random.sample(range(0,self.rows * self.cols), self.num_bombs)
 
         index = 0
-        for i in range(ROWS):
-            for j in range(COLS):
+        for i in range(self.rows):
+            for j in range(self.cols):
                 if index in bomb_indexes:
                     self.board[i][j].set_bomb()
                     self.check_neighbours(i, j)
@@ -23,13 +26,19 @@ class Board:
         for x in range(-1,2):
             for y in range(-1,2):
                 if not (x == 0 and y == 0):
-                    if i+x >= 0 and i+x < ROWS and j+y >= 0 and j+y < COLS:
+                    if i+x >= 0 and i+x < self.rows and j+y >= 0 and j+y < self.cols:
                         self.board[i+x][j+y].surrounding_bombs += 1
 
+    def show_bombs(self):
+        for row in self.board:
+            for tile in row:
+                if tile.bomb:
+                    tile.shown = True
+
     def print_board(self):
-        for i in range(ROWS):
+        for i in range(self.rows):
             row = []
-            for j in range(COLS):
+            for j in range(self.cols):
                 if self.board[i][j].bomb:
                     row.append("[O]")
                 else:
