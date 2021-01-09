@@ -1,4 +1,4 @@
-from minesweeper.Constants import SQUARE_SIZE, WHITE, RED, BLUE, BOMB_IMG, TILE_IMG, NUM_IMGS
+from minesweeper.Constants import SQUARE_SIZE, WHITE, RED, BLUE, BOMB_IMG, TILE_IMG, NUM_IMGS, FLAG_IMG
 import pygame
 
 class Tile:
@@ -8,6 +8,7 @@ class Tile:
         self.x = 0
         self.y = 0
         self.bomb = False
+        self.flagged = False
         self.shown = False
         self.surrounding_bombs = 0
         self.flag = False
@@ -22,6 +23,8 @@ class Tile:
     def get_img(self):
         if not self.shown:
             self.img = TILE_IMG
+            if self.flagged:
+                self.img = FLAG_IMG
         else:
             if self.bomb:
                 self.img = BOMB_IMG

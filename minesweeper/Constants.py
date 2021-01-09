@@ -4,7 +4,7 @@ import os
 # Board constants
 ROWS = 10
 COLS = 10
-NUM_BOMBS = 10
+NUM_BOMBS = 2
 WIN_WIDTH = 400
 WIN_HIEGHT = 400
 
@@ -24,3 +24,4 @@ IMGS_PATH = os.path.join(BASE_PATH, "imgs")
 BOMB_IMG = pygame.image.load(os.path.join(IMGS_PATH, "bomb.png"))
 NUM_IMGS = [pygame.image.load(os.path.join(IMGS_PATH,str(x) + ".png")) for x in range(0,9)]
 TILE_IMG = pygame.image.load(os.path.join(IMGS_PATH, "tile.png"))
+FLAG_IMG = pygame.image.load(os.path.join(IMGS_PATH, "flag.png"))

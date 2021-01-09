@@ -9,7 +9,14 @@ class Board:
         self.cols = cols
         self.num_bombs = num_bombs
         self.board = [[Tile(i,j) for j in range(rows)] for i in range(cols)]
-        self.generate_board()
+        # self.generate_board()
+        self.test_board()
+
+    def test_board(self):
+        self.board[0][0].set_bomb()
+        self.check_neighbours(0,0)
+        self.board[2][0].set_bomb()
+        self.check_neighbours(2,0)
 
     def generate_board(self):
         bomb_indexes = random.sample(range(0,self.rows * self.cols), self.num_bombs)
@@ -34,6 +41,12 @@ class Board:
             for tile in row:
                 if tile.bomb:
                     tile.shown = True
+
+    def show_flags(self):
+        for row in self.board:
+            for tile in row:
+                if tile.bomb:
+                    tile.flagged = True
 
     def print_board(self):
         for i in range(self.rows):
