@@ -18,6 +18,11 @@ class Game:
         self.won = False
         self.shown_tiles = 0
         self.start_time = datetime.now().replace(microsecond = 0)
+        self.end_time = None
+        self.message = ""
+
+    def flag(self, row, col):
+        self.board.board[row][col].set_flag()
 
     def select(self, row, col):
         if not self.lost and not self.won:
@@ -26,19 +31,18 @@ class Game:
 
 
     def play(self, row, col):
-        self.board.board[row][col].shown = True
-        self.shown_tiles += 1
-        print(self.shown_tiles)
-
-
-        if self.shown_tiles == self.rows * self.cols - self.num_bombs:
-            self.won = True
-            self.won_game()
-            return
+        self.board.board[row][col].show()
 
         if self.board.board[row][col].bomb:
             self.lost = True
             self.lost_game()
+            return
+
+        self.shown_tiles += 1
+
+        if self.shown_tiles == self.rows * self.cols - self.num_bombs:
+            self.won = True
+            self.won_game()
             return
 
         if self.board.board[row][col].surrounding_bombs == 0:
@@ -51,11 +55,17 @@ class Game:
 
     def won_game(self):
         self.board.show_flags()
-        # Show a winning message over the board
+        self.end_time = datetime.now().replace(microsecond = 0)
+        total_time = str(self.end_time - self.start_time)
+        index = total_time.index(":") + 1
+        total_time = total_time[index:]
+        self.message = "You won the game in a time of " + total_time + "."
         # Store the time taken?
 
     def lost_game(self):
         self.board.show_bombs()
+        self.end_time = datetime.now().replace(microsecond = 0)
+        self.message = "Game over. You lost."
 
     def draw_bomb_text(self, win):
         bomb_str = str(self.num_bombs - self.board.num_flagged())
@@ -64,13 +74,45 @@ class Game:
         win.blit(bomb_text, rect)
 
     def draw_time_text(self,win):
-        current_time = datetime.now().replace(microsecond = 0)
-        game_time = current_time -  self.start_time
+        if self.won or self.lost:
+            game_time = self.end_time - self.start_time
+        else:
+            current_time = datetime.now().replace(microsecond = 0)
+            game_time = current_time -  self.start_time
+
         game_time = str(game_time)
         index = game_time.index(":") + 1
+
         time_text = SMALL_FONT.render(game_time[index:], True, WHITE)
         rect = time_text.get_rect(center = (100, 50))
         win.blit(time_text, rect)
+
+    def draw_message(self, win):
+        allowed_width = 180
+
+        words = self.message.split()
+
+        lines = []
+        while len(words) > 0:
+            # get as many words as will fit within allowed_width
+            line_words = []
+            while len(words) > 0:
+                line_words.append(words.pop(0))
+                fw, fh = SMALL_FONT.size(' '.join(line_words + words[:1]))
+                if fw > allowed_width:
+                    break
+
+            # add a line consisting of those words
+            line = ' '.join(line_words)
+            lines.append(line)
+
+        y = 200
+        for line in lines:
+            text = SMALL_FONT.render(line, True, WHITE)
+            rect = text.get_rect(midtop = (100, y))
+            win.blit(text, rect)
+
+            y = y + text.get_height() + 5
 
     def draw(self, win):
         win.blit(BG_IMG, (0,0))
@@ -78,4 +120,5 @@ class Game:
         win.blit(self.screen, (200,0))
         self.draw_bomb_text(win)
         self.draw_time_text(win)
+        self.draw_message(win)
         pygame.display.update()
