@@ -1,4 +1,5 @@
 import pygame
+from datetime import datetime
 from minesweeper.Board import Board
 from minesweeper.Constants import ROWS, COLS, NUM_BOMBS, BG_IMG, SMALL_FONT, WHITE
 
@@ -16,6 +17,7 @@ class Game:
         self.lost = False
         self.won = False
         self.shown_tiles = 0
+        self.start_time = datetime.now().replace(microsecond = 0)
 
     def select(self, row, col):
         if not self.lost and not self.won:
@@ -57,13 +59,23 @@ class Game:
 
     def draw_bomb_text(self, win):
         bomb_str = str(self.num_bombs - self.board.num_flagged())
-        bomb_text = SMALL_FONT.render(bomb_str, False, WHITE)
+        bomb_text = SMALL_FONT.render(bomb_str, True, WHITE)
         rect = bomb_text.get_rect(midleft=(105,112))
         win.blit(bomb_text, rect)
+
+    def draw_time_text(self,win):
+        current_time = datetime.now().replace(microsecond = 0)
+        game_time = current_time -  self.start_time
+        game_time = str(game_time)
+        index = game_time.index(":") + 1
+        time_text = SMALL_FONT.render(game_time[index:], True, WHITE)
+        rect = time_text.get_rect(center = (100, 50))
+        win.blit(time_text, rect)
 
     def draw(self, win):
         win.blit(BG_IMG, (0,0))
         self.board.draw(self.screen)
         win.blit(self.screen, (200,0))
         self.draw_bomb_text(win)
+        self.draw_time_text(win)
         pygame.display.update()
