@@ -26,7 +26,7 @@ class Game:
 
     def select(self, row, col):
         if not self.lost and not self.won:
-            if not self.board.board[row][col].shown:
+            if not self.board.board[row][col].shown and not self.board.board[row][col].flagged:
                 self.play(row, col)
 
 
