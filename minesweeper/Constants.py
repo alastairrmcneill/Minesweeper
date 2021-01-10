@@ -13,6 +13,7 @@ LIGHT_GREY = (170, 170, 170)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+BACKGROUND = (51, 51, 51)
 
 # Images
 BASE_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -23,6 +24,7 @@ NUM_IMGS = [pygame.image.load(os.path.join(IMGS_PATH,str(x) + ".png")) for x in 
 TILE_IMG = pygame.image.load(os.path.join(IMGS_PATH, "tile.png"))
 FLAG_IMG = pygame.image.load(os.path.join(IMGS_PATH, "flag.png"))
 BG_IMG = pygame.image.load(os.path.join(IMGS_PATH, "background.png"))
+MENU_IMG = pygame.image.load(os.path.join(IMGS_PATH, "main_menu.png"))
 
 # Fonts
 SMALL_FONT = pygame.font.SysFont('Arial BLACK', 25)

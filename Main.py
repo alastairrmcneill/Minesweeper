@@ -1,10 +1,18 @@
 import pygame
 from minesweeper.Game import Game
-from minesweeper.Constants import WIN_HIEGHT, WIN_WIDTH, SCREEN_WIDTH
+from minesweeper.MainMenu import Menu
+from minesweeper.Constants import WIN_HIEGHT, WIN_WIDTH, SCREEN_WIDTH, MENU_IMG, WHITE, LIGHT_GREY, BACKGROUND
 
 WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HIEGHT))
 pygame.display.set_caption("Minesweeper")
 CLOCK = pygame.time.Clock()
+
+def quit_app():
+    pygame.quit()
+    quit()
+
+def start_app():
+    pass
 
 def get_row_col_from_pos(game, pos):
     row = pos[1] // game.tile_size
@@ -12,9 +20,17 @@ def get_row_col_from_pos(game, pos):
     return row, col
 
 
+difficulties = ["EASY", "MEDIUM", "HARD"]
+menu = Menu(WIN, MENU_IMG)
+menu.add_slider(difficulties,(WIN_WIDTH//2 - 75, 300, 150, 50), LIGHT_GREY, WHITE, BACKGROUND)
+menu.add_button("START", (WIN_WIDTH//2 - 75, 360, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, start_app)
+menu.add_button("QUIT", (WIN_WIDTH//2 - 75, 420, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, quit_app)
+
 def main():
+    indexes = menu.run()
+
     run = True
-    game = Game("Easy")
+    game = Game(difficulties[indexes[0]])
 
     while run:
         CLOCK.tick(20)
@@ -29,9 +45,9 @@ def main():
                 pos = pygame.mouse.get_pos()
                 if pos[0] < WIN_WIDTH - SCREEN_WIDTH:
                     if pos[0] > 60 and pos[0] < 185 and pos[1] > 550 and pos[1] < 580:
-                        game.reset("Hard")
+                        game.reset()
                     elif pos[0] > 15 and pos[0] < 45 and pos[1] > 550 and pos[1] < 580:
-                        print("Home")
+                        main()
 
                 else:
                     row, col =  get_row_col_from_pos(game, pos)

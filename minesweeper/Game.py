@@ -11,11 +11,11 @@ class Game:
         self.rows = 0
         self.cols = 0
         self.num_bombs = 0
-        self.reset(difficulty)
-
-
-    def reset(self, difficulty):
         self.get_config(difficulty)
+        self.reset()
+
+
+    def reset(self):
         self.tile_size = SCREEN_WIDTH // self.rows
         self.board = Board(self.rows, self.cols, self.num_bombs, self.tile_size)
         self.lost = False

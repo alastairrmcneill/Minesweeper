@@ -1,15 +1,13 @@
 import pygame
 pygame.font.init()
 FONT = pygame.font.SysFont("Arial BLACK", 20)
-IMG = pygame.image.load("main_menu.png")
-
 
 class Menu:
-    def __init__(self, window):
+    def __init__(self, window, menu_img):
         self.win = window
         self.width = window.get_width()
         self.height = window.get_height()
-        self.screen = IMG
+        self.screen = menu_img
         self.clock = pygame.time.Clock()
         self.buttons = []
         self.sliders = []
@@ -28,6 +26,14 @@ class Menu:
 
             for button in self.buttons:
                 button.run()
+                if button.done:
+                    button.done = False
+                    indexes = []
+                    for slider in self.sliders:
+                        indexes.append(slider.index)
+
+                    return indexes
+
 
             for slider in self.sliders:
                 slider.run()
@@ -36,11 +42,11 @@ class Menu:
 
 
 
-    def add_button(self, text, rect, active_colour, inactive_colour):
-        self.buttons.append(Button(text, rect, active_colour, inactive_colour))
+    def add_button(self, text, rect, active_colour, inactive_colour, text_colour, func):
+        self.buttons.append(Button(text, rect, active_colour, inactive_colour, text_colour, func))
 
-    def add_slider(self, options, rect, active_colour, inactive_colour):
-        self.sliders.append(Slider(options, rect, active_colour, inactive_colour))
+    def add_slider(self, options, rect, active_colour, inactive_colour, text_colour):
+        self.sliders.append(Slider(options, rect, active_colour, inactive_colour, text_colour))
 
     def draw(self):
         self.win.fill((255,255,255))
@@ -61,7 +67,7 @@ class Menu:
 
 class Button:
     num_of_buttons = 0
-    def __init__(self, text, rect, active_colour, inactive_colour):
+    def __init__(self, text, rect, active_colour, inactive_colour, text_colour, func):
         self.button_text = text
         self.x = rect[0]
         self.y = rect[1]
@@ -71,7 +77,10 @@ class Button:
         self.active_colour = active_colour
         self.inactive_colour = inactive_colour
         self.colour = self.inactive_colour
+        self.text_colour = text_colour
+        self.func = func
         self.return_value = self.num_of_buttons
+        self.done = False
         Button.num_of_buttons += 1
 
     def run(self):
@@ -79,12 +88,10 @@ class Button:
         if self.mouse_over(pos):
             self.colour = self.active_colour
             if pygame.mouse.get_pressed()[0] == 1:
-                print("Pressed button " + str(self.return_value))
+                self.func()
+                self.done = True
         else:
             self.colour = self.inactive_colour
-
-
-
 
     def mouse_over(self, pos):
         return pos[0] > self.x and pos[0] < self.x + self.width and pos[1] > self.y and pos[1] < self.y + self.height
@@ -93,14 +100,14 @@ class Button:
     def draw(self, screen):
         pygame.draw.rect(screen, self.colour, self.rect)
 
-        text = FONT.render(self.button_text, True, (255, 255, 255))
+        text = FONT.render(self.button_text, True, self.text_colour)
         text_rect = text.get_rect(center = ((self.x + self.width // 2), (self.y + self.height // 2)))
         screen.blit(text, text_rect)
         self.is_highlighted = False
 
 class Slider(Button):
-    def __init__(self, options, rect, active_colour, inactive_colour):
-        super().__init__(options[0] , rect, active_colour, inactive_colour)
+    def __init__(self, options, rect, active_colour, inactive_colour, text_colour):
+        super().__init__(options[0] , rect, active_colour, inactive_colour, text_colour, None)
         self.options = options
         self.index = 0
         self.button_text = self.options[0]
