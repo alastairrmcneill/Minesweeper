@@ -3,14 +3,9 @@ import os
 pygame.font.init()
 
 # Board constants
-ROWS = 10
-COLS = 10
-NUM_BOMBS = 2
 WIN_WIDTH = 800
 WIN_HIEGHT = 600
 SCREEN_WIDTH = SCREEN_HIEGHT = 600
-
-SQUARE_SIZE = SCREEN_HIEGHT // ROWS
 
 # Colours
 DARK_GREY = (125, 125, 125)

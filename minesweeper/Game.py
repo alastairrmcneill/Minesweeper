@@ -1,25 +1,40 @@
 import pygame
+import json
+import os
 from datetime import datetime
 from minesweeper.Board import Board
-from minesweeper.Constants import ROWS, COLS, NUM_BOMBS, BG_IMG, SMALL_FONT, WHITE
+from minesweeper.Constants import BG_IMG, SMALL_FONT, WHITE, SCREEN_WIDTH, BASE_PATH
 
 class Game:
-    def __init__(self):
+    def __init__(self, difficulty):
         self.screen = pygame.Surface((600,600))
-        self.reset()
+        self.rows = 0
+        self.cols = 0
+        self.num_bombs = 0
+        self.reset(difficulty)
 
 
-    def reset(self):
-        self.rows = ROWS
-        self.cols = COLS
-        self.num_bombs = NUM_BOMBS
-        self.board = Board(self.rows, self.cols, self.num_bombs)
+    def reset(self, difficulty):
+        self.get_config(difficulty)
+        self.tile_size = SCREEN_WIDTH // self.rows
+        self.board = Board(self.rows, self.cols, self.num_bombs, self.tile_size)
         self.lost = False
         self.won = False
         self.shown_tiles = 0
         self.start_time = datetime.now().replace(microsecond = 0)
         self.end_time = None
         self.message = ""
+
+    def get_config(self, difficulty):
+        f = open(os.path.join(BASE_PATH, "config.JSON"))
+        data = json.load(f)
+
+        for level in data["difficulties"]:
+            if level["Difficulty"] == difficulty:
+                self.rows = level["ROWS"]
+                self.cols = level["COLS"]
+                self.num_bombs = level["NUM_BOMBS"]
+
 
     def flag(self, row, col):
         self.board.board[row][col].set_flag()

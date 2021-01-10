@@ -1,10 +1,11 @@
-from minesweeper.Constants import SQUARE_SIZE, WHITE, RED, BLUE, BOMB_IMG, TILE_IMG, NUM_IMGS, FLAG_IMG
+from minesweeper.Constants import WHITE, RED, BLUE, BOMB_IMG, TILE_IMG, NUM_IMGS, FLAG_IMG
 import pygame
 
 class Tile:
-    def __init__(self, row, col):
+    def __init__(self, row, col, tile_size):
         self.row = row
         self.col = col
+        self.tile_size = tile_size
         self.x = 0
         self.y = 0
         self.bomb = False
@@ -17,8 +18,8 @@ class Tile:
         self.get_pos(row, col)
 
     def get_pos(self, row, col):
-        self.x = col * SQUARE_SIZE
-        self.y = row * SQUARE_SIZE
+        self.x = col * self.tile_size
+        self.y = row * self.tile_size
 
     def get_img(self):
         if not self.shown:
@@ -32,8 +33,7 @@ class Tile:
                 self.img = NUM_IMGS[self.surrounding_bombs]
 
     def scale_img(self):
-        self.scaled_img = pygame.transform.scale(self.img, (SQUARE_SIZE, SQUARE_SIZE))
-
+        self.scaled_img = pygame.transform.scale(self.img, (self.tile_size, self.tile_size))
 
     def set_bomb(self):
         self.bomb = True

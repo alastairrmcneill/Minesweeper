@@ -1,16 +1,17 @@
 import random
 import pygame
 from minesweeper.Tile import Tile
-from minesweeper.Constants import LIGHT_GREY, DARK_GREY, SQUARE_SIZE, WIN_HIEGHT, WIN_WIDTH
+from minesweeper.Constants import LIGHT_GREY, DARK_GREY, WIN_HIEGHT, WIN_WIDTH
 
 class Board:
-    def __init__(self, rows, cols, num_bombs):
+    def __init__(self, rows, cols, num_bombs, tile_size):
         self.rows = rows
         self.cols = cols
         self.num_bombs = num_bombs
-        self.board = [[Tile(i,j) for j in range(rows)] for i in range(cols)]
-        # self.generate_board()
-        self.test_board()
+        self.tile_size = tile_size
+        self.board = [[Tile(i,j, tile_size) for j in range(rows)] for i in range(cols)]
+        self.generate_board()
+        # self.test_board()
 
     def test_board(self):
         self.board[0][0].set_bomb()
@@ -47,8 +48,10 @@ class Board:
     def show_bombs(self):
         for row in self.board:
             for tile in row:
+                tile.flagged = False
                 if tile.bomb:
                     tile.shown = True
+
 
     def show_flags(self):
         for row in self.board:
@@ -83,7 +86,7 @@ class Board:
         win.fill(LIGHT_GREY)
         for i in range(len(self.board) + 1):
             for j in range(len(self.board[0]) + 1):
-                pygame.draw.line(win, DARK_GREY, (i * SQUARE_SIZE, 0), (i * SQUARE_SIZE, WIN_HIEGHT), 3)
-                pygame.draw.line(win, DARK_GREY, (0, j * SQUARE_SIZE), (WIN_WIDTH, j * SQUARE_SIZE), 3)
+                pygame.draw.line(win, DARK_GREY, (i * self.tile_size, 0), (i * self.tile_size, WIN_HIEGHT), 3)
+                pygame.draw.line(win, DARK_GREY, (0, j * self.tile_size), (WIN_WIDTH, j * self.tile_size), 3)
 
 
