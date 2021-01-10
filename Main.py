@@ -32,11 +32,13 @@ def main():
                         game.reset()
                     elif pos[0] > 15 and pos[0] < 45 and pos[1] > 550 and pos[1] < 580:
                         print("Home")
-                    else:
-                        print(pos)
+
                 else:
                     row, col =  get_row_col_from_pos(pos)
-                    game.select(row, col)
+                    if event.button == 1:
+                        game.select(row, col)
+                    if event.button == 3:
+                        game.flag(row, col)
 
         game.draw(WIN)
 

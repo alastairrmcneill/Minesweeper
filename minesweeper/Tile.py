@@ -38,6 +38,13 @@ class Tile:
     def set_bomb(self):
         self.bomb = True
 
+    def set_flag(self):
+        self.flagged = not self.flagged
+
+    def show(self):
+        self.shown = True
+        self.flagged = False
+
     def draw(self, win):
         self.get_img()
         self.scale_img()
