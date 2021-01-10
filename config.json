@@ -1,0 +1,22 @@
+{
+    "difficulties": [
+      {
+        "Difficulty": "easy",
+        "ROWS": 10,
+        "COLS": 10,
+        "NUM_BOMBS": 10
+      },
+      {
+        "Difficulty": "Medium",
+        "ROWS": 15,
+        "COLS": 15,
+        "NUM_BOMBS": 30
+      },
+      {
+        "Difficulty": "Hard",
+        "ROWS": 20,
+        "COLS": 20,
+        "NUM_BOMBS": 70
+      }
+    ]
+  }
