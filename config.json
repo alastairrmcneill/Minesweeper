@@ -5,14 +5,14 @@
             "ROWS": 10,
             "COLS": 10,
             "NUM_BOMBS": 10,
-            "BEST_TIME": 100.0
+            "BEST_TIME": 0
         },
         {
             "Difficulty": "MEDIUM",
             "ROWS": 15,
             "COLS": 15,
             "NUM_BOMBS": 30,
-            "BEST_TIME": 265.0
+            "BEST_TIME": 0
         },
         {
             "Difficulty": "HARD",
