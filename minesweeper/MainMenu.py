@@ -1,9 +1,19 @@
+"""
+The file for menu items containing the Menu, Button and Slider classes
+"""
 import pygame
-pygame.font.init()
-FONT = pygame.font.SysFont("Arial BLACK", 20)
+
+from minesweeper.Constants import BUTTON_FONT
 
 class Menu:
     def __init__(self, window, menu_img):
+        """
+        Init method for the Menu class
+
+        Arguments:
+            window {surface} -- Pygame window to draw to
+            menu_img {image} -- Background image for the menu
+        """
         self.win = window
         self.width = window.get_width()
         self.height = window.get_height()
@@ -13,6 +23,12 @@ class Menu:
         self.sliders = []
 
     def run(self):
+        """
+        Run the menu loop
+
+        Returns:
+            list[int] -- List of indexes of the sliders on the screen in the menu when it closes
+        """
         run = True
 
         while run:
@@ -43,12 +59,36 @@ class Menu:
 
 
     def add_button(self, text, rect, active_colour, inactive_colour, text_colour, func):
+        """
+        Add a button object to the menu
+
+        Arguments:
+            text {string} -- Text to have centered in the button
+            rect {tuple} -- (x, y, width, height) Position of the button
+            active_colour {tuple} -- (R, G, B) Colour to have the button when mouse over
+            inactive_colour {tuple} -- (R, G, B) Colour to have the button when mouse not over
+            text_colour {tuple} -- (R, G, B) Colour to have the text in the button
+            func {function} -- Function to execute when button clicked
+        """
         self.buttons.append(Button(text, rect, active_colour, inactive_colour, text_colour, func))
 
     def add_slider(self, options, rect, active_colour, inactive_colour, text_colour):
+        """
+        Add a slider object to the menu
+
+        Arguments:
+            options {list[string]} -- List of items to cycle through
+            rect {tuple} -- (x, y, width, height) Position of the slider
+            active_colour {tuple} -- (R, G, B) Colour to have the slider when mouse over
+            inactive_colour {tuple} -- (R, G, B) Colour to have the slider when mouse not over
+            text_colour {tuple} -- (R, G, B) Colour to have the text in the slider
+        """
         self.sliders.append(Slider(options, rect, active_colour, inactive_colour, text_colour))
 
     def draw(self):
+        """
+        Draw the menu to the screen
+        """
         self.win.fill((255,255,255))
         self.draw_buttons()
         self.draw_sliders()
@@ -57,10 +97,16 @@ class Menu:
         pygame.display.update()
 
     def draw_sliders(self):
+        """
+        Loop through all the sliders and draw them
+        """
         for slider in self.sliders:
             slider.draw(self.screen)
 
     def draw_buttons(self):
+        """
+        Loop throough all the buttons and draw them
+        """
         for button in self.buttons:
             button.draw(self.screen)
 
@@ -68,6 +114,17 @@ class Menu:
 class Button:
     num_of_buttons = 0
     def __init__(self, text, rect, active_colour, inactive_colour, text_colour, func):
+        """
+        Init method for the button class
+
+        Arguments:
+            text {string} -- Text to have centered in the button
+            rect {tuple} -- (x, y, width, height) Position of the button
+            active_colour {tuple} -- (R, G, B) Colour to have the button when mouse over
+            inactive_colour {tuple} -- (R, G, B) Colour to have the button when mouse not over
+            text_colour {tuple} -- (R, G, B) Colour to have the text in the button
+            func {function} -- Function to execute when button clicked
+        """
         self.button_text = text
         self.x = rect[0]
         self.y = rect[1]
@@ -84,6 +141,9 @@ class Button:
         Button.num_of_buttons += 1
 
     def run(self):
+        """
+        Function to execute when main menu loop runs. Determines what to do when clicked
+        """
         pos = pygame.mouse.get_pos()
         if self.mouse_over(pos):
             self.colour = self.active_colour
@@ -94,19 +154,44 @@ class Button:
             self.colour = self.inactive_colour
 
     def mouse_over(self, pos):
+        """
+        Check if the mouse is over the button
+
+        Arguments:
+            pos {tuple} -- (x,y) Position of the mouse on the screen
+
+        Returns:
+            boolean -- If the mouse is over the button
+        """
         return pos[0] > self.x and pos[0] < self.x + self.width and pos[1] > self.y and pos[1] < self.y + self.height
 
 
     def draw(self, screen):
+        """
+        Draw the button to the screen
+
+        Arguments:
+            screen {surface} -- Pygame surface to draw on to
+        """
         pygame.draw.rect(screen, self.colour, self.rect)
 
-        text = FONT.render(self.button_text, True, self.text_colour)
+        text = BUTTON_FONT.render(self.button_text, True, self.text_colour)
         text_rect = text.get_rect(center = ((self.x + self.width // 2), (self.y + self.height // 2)))
         screen.blit(text, text_rect)
         self.is_highlighted = False
 
 class Slider(Button):
     def __init__(self, options, rect, active_colour, inactive_colour, text_colour):
+        """
+        Init method for the slider class
+
+        Arguments:
+            options {list[string]} -- List of items to cycle through
+            rect {tuple} -- (x, y, width, height) Position of the slider
+            active_colour {tuple} -- (R, G, B) Colour to have the slider when mouse over
+            inactive_colour {tuple} -- (R, G, B) Colour to have the slider when mouse not over
+            text_colour {tuple} -- (R, G, B) Colour to have the text in the slider
+        """
         super().__init__(options[0] , rect, active_colour, inactive_colour, text_colour, None)
         self.options = options
         self.index = 0
@@ -119,6 +204,9 @@ class Slider(Button):
         self.latched = False
 
     def run(self):
+        """
+        Function to execute every time the main menu loop runs, determines what to do when clicked
+        """
         pos = pygame.mouse.get_pos()
 
         # Middle button
@@ -160,25 +248,58 @@ class Slider(Button):
 
 
     def mouse_over_left(self, pos):
+        """
+        Is the mouse over the left arrow
+
+        Arguments:
+            pos {tuple} -- (x,y) Mouse position on screen
+
+        Returns:
+            boolean -- Returns if mouse over the left arrow
+        """
         return pos[0] > self.left_rect[0] and pos[0] < self.left_rect[0] + self.left_rect[2] and pos[1] > self.left_rect[1] and pos[1] < self.left_rect[1] + self.left_rect[3]
 
     def mouse_over_right(self, pos):
+        """
+        Is the mouse over the right arrow
+
+        Arguments:
+            pos {tuple} -- (x,y) Mouse position on screen
+
+        Returns:
+            boolean -- Returns if mouse over the right arrow
+        """
         return pos[0] > self.right_rect[0] and pos[0] < self.right_rect[0] + self.right_rect[2] and pos[1] > self.right_rect[1] and pos[1] < self.right_rect[1] + self.right_rect[3]
 
     def cycle(self):
+        """
+        Increment the index of the list and change what is shown on the slider
+        """
         self.index = (self.index + 1) % self.len
         self.button_text = self.options[self.index]
 
     def right(self):
+        """
+        Increment the index when clicked right arrow
+        """
         self.index = (self.index + 1) % self.len
         self.button_text = self.options[self.index]
 
 
     def left(self):
+        """
+        Decrement the index when clicked left arrow
+        """
         self.index = (self.index - 1) % self.len
         self.button_text = self.options[self.index]
 
     def draw_arrows(self, screen):
+        """
+        Draw the arrows to the screen
+
+        Arguments:
+            screen {surface} -- Pygame surface to draw to
+        """
         pygame.draw.line(screen, self.right_colour, ((self.x + self.width + self.width // 10 ,self.y + self.height // 5)), (self.x + self.width + self.width // 4 ,self.y + self.height // 2), 5)
         pygame.draw.line(screen, self.right_colour, ((self.x + self.width + self.width // 10 ,self.y + self.height - self.height // 5)), (self.x + self.width + self.width // 4 ,self.y + self.height // 2), 5)
 
@@ -186,5 +307,11 @@ class Slider(Button):
         pygame.draw.line(screen, self.left_colour, ((self.x - self.width // 10 ,self.y +self.height - self.height // 5)), (self.x - self.width // 4 ,self.y + self.height // 2), 5)
 
     def draw(self, screen):
+        """
+        Draw the whole slider
+
+        Arguments:
+            screen {surface} -- Pygame surface to draw to
+        """
         self.draw_arrows(screen)
         super().draw(screen)

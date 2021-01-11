@@ -3,25 +3,43 @@ My recreation of the classic game of minesweeper, implementing different levels,
 and a main menu.
 Author: Alastair McNeill
 Started: 6th January 2021
-Finished:
+Finished: 11th January 2021
 """
 import pygame
+
+from minesweeper.Constants import (BACKGROUND, LIGHT_GREY, MENU_IMG,
+                                   SCREEN_WIDTH, WHITE, WIN_HIEGHT, WIN_WIDTH)
 from minesweeper.Game import Game
 from minesweeper.MainMenu import Menu
-from minesweeper.Constants import WIN_HIEGHT, WIN_WIDTH, SCREEN_WIDTH, MENU_IMG, WHITE, LIGHT_GREY, BACKGROUND
 
 WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HIEGHT))
 pygame.display.set_caption("Minesweeper")
 CLOCK = pygame.time.Clock()
 
 def quit_app():
+    """
+    Function to quit everything to pass into menu class
+    """
     pygame.quit()
     quit()
 
 def start_app():
+    """
+    Placeholder function to pass into menu class
+    """
     pass
 
 def get_row_col_from_pos(game, pos):
+    """
+    Determine the row and col in the game that was clicked
+
+    Arguments:
+        game {Game} -- Game object that we are playing in to determine the size of a tile
+        pos {tuple (x,y)} -- Mouse click position in the for of x, y to
+
+    Returns:
+        tuple (row, col) -- The row and col that were clicked upon
+    """
     row = pos[1] // game.tile_size
     col = (pos[0] - 200) // game.tile_size
     return row, col
@@ -34,6 +52,9 @@ menu.add_button("START", (WIN_WIDTH//2 - 75, 360, 150, 50), LIGHT_GREY, WHITE, B
 menu.add_button("QUIT", (WIN_WIDTH//2 - 75, 420, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, quit_app)
 
 def main():
+    """
+    Main loop for the game that runs the menu class, executes the game and handles the user interaction
+    """
     indexes = menu.run()
 
     run = True
