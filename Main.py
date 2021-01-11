@@ -1,3 +1,10 @@
+"""
+My recreation of the classic game of minesweeper, implementing different levels, reseting the game
+and a main menu.
+Author: Alastair McNeill
+Started: 6th January 2021
+Finished:
+"""
 import pygame
 from minesweeper.Game import Game
 from minesweeper.MainMenu import Menu

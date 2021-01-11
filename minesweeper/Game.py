@@ -11,7 +11,8 @@ class Game:
         self.rows = 0
         self.cols = 0
         self.num_bombs = 0
-        self.get_config(difficulty)
+        self.difficulty = difficulty
+        self.get_config()
         self.reset()
 
 
@@ -25,15 +26,16 @@ class Game:
         self.end_time = None
         self.message = ""
 
-    def get_config(self, difficulty):
+    def get_config(self):
         f = open(os.path.join(BASE_PATH, "config.JSON"))
         data = json.load(f)
 
         for level in data["difficulties"]:
-            if level["Difficulty"] == difficulty:
+            if level["Difficulty"] == self.difficulty:
                 self.rows = level["ROWS"]
                 self.cols = level["COLS"]
                 self.num_bombs = level["NUM_BOMBS"]
+                self.best_time = level["BEST_TIME"]
 
 
     def flag(self, row, col):
@@ -71,11 +73,31 @@ class Game:
     def won_game(self):
         self.board.show_flags()
         self.end_time = datetime.now().replace(microsecond = 0)
-        total_time = str(self.end_time - self.start_time)
+        difference = self.end_time - self.start_time
+        total_time = str(difference)
         index = total_time.index(":") + 1
         total_time = total_time[index:]
         self.message = "You won the game in a time of " + total_time + "."
         # Store the time taken?
+
+        if difference.total_seconds() < self.best_time or self.best_time == 0:
+            self.message = "You won the game in a new best time of " + total_time + "."
+            self.best_time = difference.total_seconds()
+            self.write_best_score(difference.total_seconds())
+
+    def write_best_score(self, time):
+
+        with open(os.path.join(BASE_PATH, "config.JSON"), "r") as f:
+            data = json.load(f)
+
+        for level in data["difficulties"]:
+            if level["Difficulty"] == self.difficulty:
+                level["BEST_TIME"] = time
+
+        with open(os.path.join(BASE_PATH, "config.JSON"), "w") as f:
+            json.dump(data, f, indent=4)
+
+
 
     def lost_game(self):
         self.board.show_bombs()

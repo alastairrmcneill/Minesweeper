@@ -1,22 +1,25 @@
 {
     "difficulties": [
-      {
-        "Difficulty": "EASY",
-        "ROWS": 10,
-        "COLS": 10,
-        "NUM_BOMBS": 10
-      },
-      {
-        "Difficulty": "MEDIUM",
-        "ROWS": 15,
-        "COLS": 15,
-        "NUM_BOMBS": 30
-      },
-      {
-        "Difficulty": "HARD",
-        "ROWS": 20,
-        "COLS": 20,
-        "NUM_BOMBS": 70
-      }
+        {
+            "Difficulty": "EASY",
+            "ROWS": 10,
+            "COLS": 10,
+            "NUM_BOMBS": 10,
+            "BEST_TIME": 100.0
+        },
+        {
+            "Difficulty": "MEDIUM",
+            "ROWS": 15,
+            "COLS": 15,
+            "NUM_BOMBS": 30,
+            "BEST_TIME": 265.0
+        },
+        {
+            "Difficulty": "HARD",
+            "ROWS": 20,
+            "COLS": 20,
+            "NUM_BOMBS": 70,
+            "BEST_TIME": 0
+        }
     ]
-  }
+}
