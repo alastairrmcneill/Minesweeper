@@ -5,16 +5,21 @@ Author: Alastair McNeill
 Started: 6th January 2021
 Finished: 11th January 2021
 """
+import os
+import json
+
 import pygame
 
 from minesweeper.Constants import (BACKGROUND, LIGHT_GREY, MENU_IMG,
-                                   SCREEN_WIDTH, WHITE, WIN_HIEGHT, WIN_WIDTH)
+                                   SCREEN_WIDTH, WHITE, WIN_HIEGHT, WIN_WIDTH, BASE_PATH)
 from minesweeper.Game import Game
 from minesweeper.MainMenu import Menu
 
 WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HIEGHT))
 pygame.display.set_caption("Minesweeper")
 CLOCK = pygame.time.Clock()
+
+
 
 def quit_app():
     """
@@ -44,17 +49,37 @@ def get_row_col_from_pos(game, pos):
     col = (pos[0] - 200) // game.tile_size
     return row, col
 
+def read_config():
+    with open(os.path.join(BASE_PATH, "config.JSON"), "r") as f:
+        data = json.load(f)
+    CONFIG = data["difficulties"]
+    return CONFIG
 
-difficulties = ["EASY", "MEDIUM", "HARD"]
-menu = Menu(WIN, MENU_IMG)
-menu.add_slider(difficulties,(WIN_WIDTH//2 - 75, 300, 150, 50), LIGHT_GREY, WHITE, BACKGROUND)
-menu.add_button("START", (WIN_WIDTH//2 - 75, 360, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, start_app)
-menu.add_button("QUIT", (WIN_WIDTH//2 - 75, 420, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, quit_app)
+def setup_menu():
+    CONFIG = read_config()
+
+    DIFFICULTIES = []
+    TEXT_BOXES = []
+
+    for level in CONFIG:
+        DIFFICULTIES.append(level["Difficulty"])
+        text = level["Difficulty"] + "\n" + str(level["BEST_TIME"]) + " seconds"
+        TEXT_BOXES.append(text)
+
+    menu = Menu(WIN, MENU_IMG)
+    menu.add_slider(DIFFICULTIES,(WIN_WIDTH//2 - 75, 300, 150, 50), LIGHT_GREY, WHITE, BACKGROUND)
+    menu.add_button("START", (WIN_WIDTH//2 - 75, 360, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, start_app)
+    menu.add_button("QUIT", (WIN_WIDTH//2 - 75, 420, 150, 50), LIGHT_GREY, WHITE, BACKGROUND, quit_app)
+    menu.add_text_box(TEXT_BOXES[0], WHITE, (WIN_WIDTH // 4, 200))
+    menu.add_text_box(TEXT_BOXES[1], WHITE, (WIN_WIDTH // 2, 200))
+    menu.add_text_box(TEXT_BOXES[2], WHITE, (WIN_WIDTH - WIN_WIDTH // 4, 200))
+    return menu, DIFFICULTIES
 
 def main():
     """
     Main loop for the game that runs the menu class, executes the game and handles the user interaction
     """
+    menu, difficulties = setup_menu()
     indexes = menu.run()
 
     run = True

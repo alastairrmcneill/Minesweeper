@@ -34,3 +34,4 @@ MENU_IMG = pygame.image.load(os.path.join(IMGS_PATH, "main_menu.png"))
 # Fonts
 SMALL_FONT = pygame.font.SysFont('Arial BLACK', 25)
 BUTTON_FONT = pygame.font.SysFont("Arial BLACK", 20)
+TEXT_FONT = pygame.font.SysFont("Arial", 20)

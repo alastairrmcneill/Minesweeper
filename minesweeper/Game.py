@@ -141,7 +141,7 @@ class Game:
 
         for level in data["difficulties"]:
             if level["Difficulty"] == self.difficulty:
-                level["BEST_TIME"] = time
+                level["BEST_TIME"] = int(time)
 
         with open(os.path.join(BASE_PATH, "config.JSON"), "w") as f:
             json.dump(data, f, indent=4)

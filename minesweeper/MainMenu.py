@@ -3,7 +3,7 @@ The file for menu items containing the Menu, Button and Slider classes
 """
 import pygame
 
-from minesweeper.Constants import BUTTON_FONT
+from minesweeper.Constants import BUTTON_FONT, TEXT_FONT, BACKGROUND
 
 class Menu:
     def __init__(self, window, menu_img):
@@ -17,10 +17,12 @@ class Menu:
         self.win = window
         self.width = window.get_width()
         self.height = window.get_height()
+        self.original_screen = menu_img
         self.screen = menu_img
         self.clock = pygame.time.Clock()
         self.buttons = []
         self.sliders = []
+        self.text_boxes = []
 
     def run(self):
         """
@@ -56,8 +58,6 @@ class Menu:
 
             self.draw()
 
-
-
     def add_button(self, text, rect, active_colour, inactive_colour, text_colour, func):
         """
         Add a button object to the menu
@@ -85,13 +85,26 @@ class Menu:
         """
         self.sliders.append(Slider(options, rect, active_colour, inactive_colour, text_colour))
 
+    def add_text_box(self,text, colour, mid_top):
+        """
+        Add a Text box object to the menu
+
+        Arguments:
+            text {string} -- Text you want to display
+            colour {tuple} -- (R, G, B) Colour of the text
+            mid_top {tuple} -- (x, y) Position of the center top of the text box
+        """
+        self.text_boxes.append(Text_Box(text, colour, mid_top))
+
     def draw(self):
         """
         Draw the menu to the screen
         """
         self.win.fill((255,255,255))
+
         self.draw_buttons()
         self.draw_sliders()
+        self.draw_text_boxes()
 
         self.win.blit(self.screen, (0,0))
         pygame.display.update()
@@ -109,6 +122,13 @@ class Menu:
         """
         for button in self.buttons:
             button.draw(self.screen)
+
+    def draw_text_boxes(self):
+        """
+        Loop through all the buttons and drawm them
+        """
+        for text_box in self.text_boxes:
+            text_box.draw(self.screen)
 
 
 class Button:
@@ -315,3 +335,39 @@ class Slider(Button):
         """
         self.draw_arrows(screen)
         super().draw(screen)
+
+
+class Text_Box:
+    def __init__(self, text, colour, mid_top):
+        """
+        Init method for text box
+
+        Arguments:
+            text {string} -- Text to be displayed
+            colour {tuple} -- (R, G, B) Colour to display text
+            mid_top {tuple} -- (x, y) Mid top point of the text box
+        """
+        self.text = text
+        self.colour = colour
+        self.mid_top = mid_top
+        self.x = self.mid_top[0]
+        self.y = self.mid_top[1]
+
+    def draw(self, screen):
+        """
+        Draw the text box to the screen
+
+        Arguments:
+            screen {surface} -- Pygame surface to draw to
+        """
+        lines = self.text.splitlines()
+
+        y = self.y
+
+        for line in lines:
+            text = TEXT_FONT.render(line, True, self.colour)
+            rect = text.get_rect(midtop = (self.x, y))
+            pygame.draw.rect(screen, BACKGROUND, rect)
+            screen.blit(text, rect)
+
+            y = y + text.get_height() + 5
